@@ -25,7 +25,7 @@ def IndexView(request):
         return HttpResponse(html)
     except ObjectDoesNotExist:
         CityData(city_title=city_title,latest_time=latest_time,pollutant_name=pollutant_name,pollutant_unit=pollutant_unit,pollutant_value=pollutant_value).save()
-        return render(request, template_name="response.html")
+        return render(request, template_name="index.html")
 
 
 class CityDataViewSet(viewsets.ModelViewSet):
