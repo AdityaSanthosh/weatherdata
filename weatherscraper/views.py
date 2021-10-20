@@ -1,4 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse
+from .models import CityData
+from rest_framework import viewsets
+from .serializers import CityDataSerializer
+from django.core.exceptions import ObjectDoesNotExist
 
 
 # Create your views here.
@@ -13,4 +17,17 @@ def IndexView(request):
     latest_time = soup.find(class_='detail-main').find(class_='update-time').text.strip()
     pollutant_name = soup.find(class_="pollutants").find(class_="name").text
     pollutant_unit = soup.find(class_="pollutants").find(class_="unit").text
-    pollutant_value = soup.find(class_="pollutants").find(class_="value").text
+    pollutant_value = int(soup.find(class_="pollutants").find(class_="value").text)
+    try:
+        obj = CityData.objects.get(city_title=city_title,latest_time=latest_time, pollutant_name=pollutant_name,pollutant_unit=pollutant_unit,pollutant_value=pollutant_value)
+        html = "<html><body><p>The Data is already fetched. Try accessing it via the <a " \
+               "href='/citydata'>API</a></p></body></html>"
+        return HttpResponse(html)
+    except ObjectDoesNotExist:
+        CityData(city_title=city_title,latest_time=latest_time,pollutant_name=pollutant_name,pollutant_unit=pollutant_unit,pollutant_value=pollutant_value).save()
+        return render(request, template_name="response.html")
+
+
+class CityDataViewSet(viewsets.ModelViewSet):
+    queryset = CityData.objects.all()
+    serializer_class = CityDataSerializer
