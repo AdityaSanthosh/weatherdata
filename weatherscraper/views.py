@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect
 from .models import CityData
 from rest_framework import viewsets
 from .serializers import CityDataSerializer
@@ -36,3 +36,4 @@ class CityDataViewSet(viewsets.ModelViewSet):
 
 def clearData(request):
     CityData.objects.all().delete()
+    return redirect('/')
