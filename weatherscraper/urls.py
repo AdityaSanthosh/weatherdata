@@ -8,5 +8,6 @@ router.register(r'citydata', views.CityDataViewSet)
 urlpatterns = [
     path('', views.IndexView, name='index'),
     path('', include(router.urls)),
+    path('/clear',views.clearData),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]

@@ -21,7 +21,8 @@ def IndexView(request):
     try:
         obj = CityData.objects.get(city_title=city_title,latest_time=latest_time, pollutant_name=pollutant_name,pollutant_unit=pollutant_unit,pollutant_value=pollutant_value)
         html = "<html><body><p>The Data is already fetched. Try accessing it via the <a " \
-               "href='/citydata'>API</a></p></body></html>"
+               "href='/citydata'>API</a></p><p>Click <a href='/clear'>here</a> to Delete it and refetch " \
+               "it.</p></body></html> "
         return HttpResponse(html)
     except ObjectDoesNotExist:
         CityData(city_title=city_title,latest_time=latest_time,pollutant_name=pollutant_name,pollutant_unit=pollutant_unit,pollutant_value=pollutant_value).save()
@@ -31,3 +32,7 @@ def IndexView(request):
 class CityDataViewSet(viewsets.ModelViewSet):
     queryset = CityData.objects.all()
     serializer_class = CityDataSerializer
+
+
+def clearData(request):
+    CityData.objects.all().delete()
